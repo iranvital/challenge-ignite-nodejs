@@ -1,32 +1,33 @@
 import http from 'node:http'
-import { json } from './middlewares/json.js'
 
-const tasks = []
+import { json } from './middlewares/json.js'
+import { routes } from './routes.js'
+import { extractQueryParams } from './utils/extract-query-params.js'
+
+
 
 const server = http.createServer(async (req, res) => {
 
-    const { method, url } = req
+    const { method, url } = req;
 
-    await json(req, res)
+  await json(req, res);
 
-    if (method === 'GET' && url === '/tasks') {
-        return res.end(JSON.stringify(tasks))
-    }
+  const route = routes.find(route => {
+    return route.method === method && route.path.test(url)
+  });
 
-    if (method === 'POST' && url === '/tasks') {
-        const { title, description } = req.body
+  if (route) {
+    const routeParams = req.url.match(route.path);
 
-        tasks.push({
-            id: 1,
-            title,
-            description,
-            completed: false
-        })
+    const { query, ...params } = routeParams.groups;
 
-        return res.writeHead(201).end()
-    }   
+    req.query = query ? extractQueryParams(query) : {};
+    req.params = params;
 
-    return res.writeHead(404).end('Not Found')
+    return route.handler(req, res);
+  }
+
+  return res.writeHead(404).end('Not Found');
  })
     
 server.listen(3333)

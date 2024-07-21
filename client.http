@@ -11,5 +11,35 @@ Content-Type: application/json
 
 {
   "title": "Task 01",
-  "description": "Description of task 01"
+  "description": "Task 01 Descriptio"
 }
+
+###
+
+# @name: Update a task
+PUT {{baseURL}}/tasks/2e090e6d-9bc6-4440-b78e-03932eaa651e
+Content-Type: application/json
+
+{
+  "title": "Task 02",
+  "description": "Task 02 Descriptio"
+}
+
+###
+
+# @name: Update a task
+PATCH  {{baseURL}}/tasks/78802dea-6365-4e83-816d-4ab27b5f515c/completed
+Content-Type: application/json
+
+###
+
+# @name: Select a task
+GET  {{baseURL}}/tasks?search=02
+Content-Type: application/json
+
+###
+
+# @name: Delete a task
+DELETE  {{baseURL}}/tasks/6cf77c79-adc5-4543-a896-9a951335f736
+Content-Type: application/json
+
